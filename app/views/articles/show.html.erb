@@ -1,0 +1,75 @@
+<%= link_to 'Back to Articles', articles_path, class: 'btn btn-link'  %>
+
+<% @article.categories.each do |cat| %>
+<p>Tags:
+  <%= cat.name %>
+</p>
+<% end %>
+
+<h2>
+<%= @article.title %>
+<%= link_to edit_article_path(@article) do %>
+<button class="btn btn-info btn-sm">
+  <span class="glyphicon glyphicon-edit"></span> Edit Article
+</button>
+<%end%>
+<%= link_to article_path(@article), method: :delete, data: { confirm: 'Are you sure?' } do %>
+<button type="button" class="btn btn-danger btn-sm">
+  <span class="glyphicon glyphicon-remove"></span> Delete Article
+</button>
+<%end%>
+</h2>
+
+<p><%= @article.body %> </p>
+
+<br>
+
+
+<%= link_to vote_article_path(@article, vote: true), method: :post do %>
+<button type="button" class="btn btn-primary btn-sm">
+  <span class="glyphicon glyphicon-thumbs-up"></span>
+</button>
+<%end%>
+
+<%= link_to vote_article_path(@article, vote: false), method: :post do %>
+<button type="button" class="btn btn-danger btn-sm">
+  <span class="glyphicon glyphicon-thumbs-down"></span>
+</button>
+<%end%>
+
+ Article like count: <%= @article.vote_count %>
+<br>
+
+<h2>Comments</h2>
+
+<div class="">
+<% @article.comments.each do |comment| %>
+<p> <%= comment.body %>
+  <br>
+  <%= link_to 'Up Vote', vote_article_comment_path(@article, comment, vote: true), method: :post, class: "btn btn-success btn-xs" %>
+  <%= link_to 'Down Vote', vote_article_comment_path(@article, comment, vote: false), method: :post, class: "btn btn-warning btn-xs" %>
+
+  Votes: <%= comment.vote_count %>
+</p>
+<% end %>
+
+
+<% if @comment.errors.any? %>
+<ul>
+  <% @comment.errors.full_messages.each do |error| %>
+    <li><%= error %></li>
+  <% end %>
+</ul>
+<% end %>
+
+
+<h2>Share your thoughts </h2>
+<%= form_for([@article, @comment]) do |f| %>
+  <%= f.label :body %>
+  <br>
+  <%= f.text_area :body, size: "60x12" %>
+  <br>
+  <%= f.submit "Create Comment", class: "btn btn-primary btn-xs" %>
+<%end%>
+
+</div>
